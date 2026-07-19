@@ -1,3 +1,29 @@
-/* You can add global styles to this file, and also import other style files */
+/**
+ * Standalone defaults only. When embedded, the shell owns --rmf-* on html;
+ * the card reads those (with local var() fallbacks).
+ */
+:root {
+  --rmf-color-page: #f8fafc;
+  --rmf-color-surface: #ffffff;
+  --rmf-color-fg: #0f172a;
+  --rmf-color-muted: #64748b;
+  --rmf-color-border: #e2e8f0;
+  --rmf-radius-md: 0.5rem;
+  --rmf-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
+}
 
-@import 'tailwindcss';
+:root.dark,
+:root[data-rmf-theme='dark'] {
+  --rmf-color-page: #0f172a;
+  --rmf-color-surface: #1e293b;
+  --rmf-color-fg: #f8fafc;
+  --rmf-color-muted: #94a3b8;
+  --rmf-color-border: #334155;
+  --rmf-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+body {
+  margin: 0;
+  background: var(--rmf-color-page);
+  color: var(--rmf-color-fg);
+}

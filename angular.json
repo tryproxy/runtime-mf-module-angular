@@ -87,7 +87,7 @@
           "options": {
             "runnerConfig": "vitest.config.ts",
             "coverageReporters": ["html", "json-summary", "text"],
-            "coverageExclude": ["src/main.ts", "src/app/app.config.ts", "src/app/app.routes.ts"]
+            "coverageExclude": ["src/main.ts", "src/app/app.config.ts", "src/vite-main.ts"]
           }
         },
         "lint": {

@@ -15,12 +15,14 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render title', async () => {
+  it('should render bridge demo card', async () => {
     const fixture = TestBed.createComponent(App);
 
     await fixture.whenStable();
     const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, film-collection');
+    expect(compiled.querySelector('h1')?.textContent).toContain('Angular remote');
+    expect(compiled.textContent).toContain('locale: en');
+    expect(compiled.textContent).toContain('Theme: light');
   });
 });

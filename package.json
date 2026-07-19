@@ -4,11 +4,14 @@
   "type": "module",
   "scripts": {
     "ng": "ng",
+    "dev": "vite",
     "start": "ng serve",
     "start:host": "ng serve --host 0.0.0.0",
-    "build": "ng build",
+    "build": "vite build",
+    "build:ng": "ng build",
     "build:dev": "ng build --configuration development",
     "build:watch": "ng build --watch --configuration development",
+    "preview": "vite preview",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "ng lint",
@@ -44,6 +47,7 @@
     "tslib": "^2.3.0"
   },
   "devDependencies": {
+    "@analogjs/vite-plugin-angular": "^2.6.3",
     "@angular-eslint/builder": "21.3.1",
     "@angular/build": "^21.2.8",
     "@angular/cli": "^21.2.8",
@@ -52,6 +56,7 @@
     "@commitlint/config-angular": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/js": "^10.0.1",
+    "@originjs/vite-plugin-federation": "^1.4.1",
     "@playwright/test": "1.59.1",
     "@stylistic/eslint-plugin": "^5.10.0",
     "@tailwindcss/postcss": "^4.1.12",
@@ -69,6 +74,16 @@
     "tailwindcss": "^4.1.12",
     "typescript": "~5.9.2",
     "typescript-eslint": "8.56.1",
+    "vite": "^7.1.2",
     "vitest": "^4.0.8"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "@parcel/watcher",
+      "lmdb",
+      "msgpackr-extract",
+      "unrs-resolver"
+    ]
   }
 }

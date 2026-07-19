@@ -1,6 +1,6 @@
-# FilmCollection
+# runtime-mf-module-angular
 
-Angular 21 frontend project using pnpm, ESLint, Vitest, Playwright, Tailwind CSS, GitHub Actions CI.
+Minimal Angular Module Federation remote for `runtime-mf-shell`.
 
 ## Setup
 
@@ -8,15 +8,25 @@ Angular 21 frontend project using pnpm, ESLint, Vitest, Playwright, Tailwind CSS
 pnpm install --frozen-lockfile
 ```
 
-## Development
+## Federation remote (shell integration)
+
+Serves `@originjs` `remoteEntry.js` exposing `./mount` (HostBridge mount contract).
 
 ```bash
-pnpm start
+pnpm dev       # http://localhost:5002 — CORS on; remoteEntry at /assets/remoteEntry.js
 pnpm build
+pnpm preview   # also port 5002
+```
+
+Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`).
+
+Ports: shell `5000`, React remote `5001`, this Angular remote `5002`.
+
+## Standalone Angular CLI
+
+```bash
+pnpm start     # ng serve (default Angular port)
+pnpm build:ng
 pnpm lint
-pnpm format
-pnpm format:check
 pnpm test
-pnpm test:ci
-pnpm e2e
 ```

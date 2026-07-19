@@ -1,12 +1,16 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { BridgeDemoCard } from './shared/bridge-demo-card';
+import { applyModuleTheme } from './shared/apply-module-theme';
 
+/** Standalone CLI entry — defaults when no HostBridge. */
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [BridgeDemoCard],
+  template: ` <app-bridge-demo-card themeMode="light" locale="en" /> `,
 })
 export class App {
-  protected readonly title = signal('film-collection');
+  constructor() {
+    applyModuleTheme('light');
+  }
 }
