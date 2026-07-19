@@ -1,0 +1,9 @@
+project_doc_fallback_filenames = ["TEAM_GUIDE.md", ".agents.md"]
+
+web_search = "live"
+personality = "none"
+
+model_reasoning_summary = "pragmatic"
+
+[features]
+shell_snapshot = true

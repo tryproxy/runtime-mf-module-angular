@@ -1,0 +1,11 @@
+**/dist
+**/coverage
+**/.vscode
+**/.nyc_output
+**/node_modules
+**/.artifacts
+**/.angular
+
+tmp
+
+pnpm-lock.yaml
