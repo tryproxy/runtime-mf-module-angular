@@ -1,4 +1,4 @@
-import type { AppLocale } from '../entry/remote-contract';
+import type { AppLocale } from '@platform/runtime-mf-contract';
 
 export interface CardCopy {
   title: string;

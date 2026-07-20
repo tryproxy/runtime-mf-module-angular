@@ -5,7 +5,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
-import type { MountRemoteApp } from './remote-contract';
+import type { MountRemoteApp } from '@platform/runtime-mf-contract';
 import { RemoteRoot } from './remote-root';
 
 /**
@@ -51,6 +51,7 @@ export const mount: MountRemoteApp = ({ container, bridge }) => {
   };
 };
 
+/** Re-export contract types from the federation entry. */
 export type {
   AppLocale,
   HostBridge,
@@ -59,4 +60,4 @@ export type {
   RemoteAppInstance,
   TelemetryProps,
   ThemeMode,
-} from './remote-contract';
+} from '@platform/runtime-mf-contract';

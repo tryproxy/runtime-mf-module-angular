@@ -11,4 +11,4 @@ export type {
   RemoteAppInstance,
   TelemetryProps,
   ThemeMode,
-} from './remote-contract';
+} from '@platform/runtime-mf-contract';

@@ -1,4 +1,4 @@
-import type { ThemeMode } from '../entry/remote-contract';
+import type { ThemeMode } from '@platform/runtime-mf-contract';
 
 /** Keep `data-rmf-theme` + `.dark` in sync (document + optional mount root). */
 export function applyModuleTheme(theme: ThemeMode, mountRoot?: HTMLElement | null): void {

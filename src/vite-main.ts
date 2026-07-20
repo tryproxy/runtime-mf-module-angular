@@ -1,4 +1,5 @@
 import './styles.css';
+import { createMockHostBridge } from '@platform/runtime-mf-contract';
 import { mount } from './app/entry/mount';
 
 const container = document.getElementById('root');
@@ -11,35 +12,5 @@ if (!container) {
 mount({
   container,
   basename: '/',
-  bridge: {
-    theme: {
-      getSnapshot: () => ({ mode: 'light' }),
-      subscribe: () => () => undefined,
-    },
-    i18n: {
-      getLocale: () => 'en',
-      subscribe: () => () => undefined,
-    },
-    auth: {
-      getSession: () => null,
-    },
-    navigation: {
-      getLocation: () => ({
-        pathname: window.location.pathname,
-        search: window.location.search,
-        hash: window.location.hash,
-      }),
-      navigate: path => {
-        window.history.pushState(null, '', path);
-      },
-      replace: path => {
-        window.history.replaceState(null, '', path);
-      },
-    },
-    telemetry: {
-      track: () => undefined,
-      captureException: () => undefined,
-      captureMessage: () => undefined,
-    },
-  },
+  bridge: createMockHostBridge({ theme: 'light', locale: 'en' }),
 });

@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
 import { BridgeDemoCard } from '../shared/bridge-demo-card';
 import { applyModuleTheme } from '../shared/apply-module-theme';
-import type { AppLocale, HostBridge, ThemeMode } from './remote-contract';
+import type { AppLocale, HostBridge, ThemeMode } from '@platform/runtime-mf-contract';
 
 @Component({
   selector: 'app-remote-root',

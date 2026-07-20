@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, computed, input } from '@angular/core';
-import type { AppLocale, ThemeMode } from '../entry/remote-contract';
+import type { AppLocale, ThemeMode } from '@platform/runtime-mf-contract';
 import { getCardCopy } from './messages';
 
 /** Tiny fungular card: shows shell theme + i18n via HostBridge. */
