@@ -7,7 +7,9 @@ import type { AppLocale, HostBridge, ThemeMode } from '@platform/runtime-mf-cont
   selector: 'app-remote-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [BridgeDemoCard],
-  template: ` <app-bridge-demo-card [themeMode]="themeMode()" [locale]="locale()" /> `,
+  template: `
+    <app-bridge-demo-card [themeMode]="themeMode()" [locale]="locale()" [bridge]="bridge()" />
+  `,
 })
 export class RemoteRoot {
   public readonly bridge = input<HostBridge | null>(null);
