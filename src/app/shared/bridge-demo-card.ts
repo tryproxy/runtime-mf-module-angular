@@ -4,11 +4,25 @@ import { getCardCopy } from './messages';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || 'http://localhost:3000';
 
+const JSON_PANEL = {
+  light: {
+    // !important — shell dark `color` + any preflight on <pre>/code otherwise wins
+    style: 'background:#f1f5f9!important;color:#0f172a!important',
+  },
+  dark: {
+    style: 'background:#0b1220!important;color:#e2e8f0!important',
+  },
+} as const;
+
 /** Shows shell theme/locale + protected GET via bridge.auth.http. */
 @Component({
   selector: 'app-bridge-demo-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: `
+    :host {
+      display: block;
+    }
+
     .card {
       max-width: 28rem;
       margin: 1.5rem;
@@ -62,13 +76,27 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || 'http
       word-break: break-all;
     }
 
-    pre {
+    .me-json {
+      display: block;
       margin: 0.75rem 0 0;
       padding: 0.75rem;
       border-radius: 0.5rem;
-      background: var(--rmf-color-muted-bg, #f1f5f9);
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
       font-size: 0.75rem;
+      line-height: 1.4;
       overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    .me-json--light {
+      background: #f1f5f9 !important;
+      color: #0f172a !important;
+    }
+
+    .me-json--dark {
+      background: #0b1220 !important;
+      color: #e2e8f0 !important;
     }
   `,
   template: `
@@ -84,7 +112,14 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || 'http
         <p class="error">{{ error() }}</p>
       }
       @if (meJson()) {
-        <pre>{{ meJson() }}</pre>
+        <div
+          class="me-json"
+          [class.me-json--dark]="themeMode() === 'dark'"
+          [class.me-json--light]="themeMode() !== 'dark'"
+          [attr.style]="jsonStyle()"
+        >
+          {{ meJson() }}
+        </div>
       }
     </article>
   `,
@@ -99,6 +134,10 @@ export class BridgeDemoCard {
   public readonly meJson = signal<string | null>(null);
 
   public readonly copy = computed(() => getCardCopy(this.locale()));
+
+  public readonly jsonStyle = computed(
+    () => JSON_PANEL[this.themeMode() === 'dark' ? 'dark' : 'light'].style,
+  );
 
   public async requestMe(): Promise<void> {
     this.error.set(null);
