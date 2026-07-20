@@ -1,24 +1,48 @@
 /**
- * Standalone defaults only. When embedded, the shell owns --rmf-* on html;
- * the card reads those (with local var() fallbacks).
+ * Standalone defaults only. When embedded, the shell owns --card/--muted/--primary
+ * (and --rmf-*) on html; the card reads those first.
  */
 :root {
+  --background: #ffffff;
+  --foreground: #0a0a0a;
+  --card: #ffffff;
+  --card-foreground: #0a0a0a;
+  --primary: #171717;
+  --primary-foreground: #fafafa;
+  --muted: #f4f4f5;
+  --muted-foreground: #71717a;
+  --destructive: #dc2626;
+  --border: #e4e4e7;
+  --radius: 0.625rem;
+
   --rmf-color-page: #f8fafc;
-  --rmf-color-surface: #ffffff;
-  --rmf-color-fg: #0f172a;
-  --rmf-color-muted: #64748b;
-  --rmf-color-border: #e2e8f0;
-  --rmf-radius-md: 0.5rem;
+  --rmf-color-surface: var(--card);
+  --rmf-color-fg: var(--foreground);
+  --rmf-color-muted: var(--muted-foreground);
+  --rmf-color-border: var(--border);
+  --rmf-radius-md: var(--radius);
   --rmf-shadow-sm: 0 1px 2px rgb(15 23 42 / 0.06);
 }
 
 :root.dark,
 :root[data-rmf-theme='dark'] {
-  --rmf-color-page: #0f172a;
-  --rmf-color-surface: #1e293b;
-  --rmf-color-fg: #f8fafc;
-  --rmf-color-muted: #94a3b8;
-  --rmf-color-border: #334155;
+  /* Approx shell .dark oklch tokens */
+  --background: #121212;
+  --foreground: #fafafa;
+  --card: #1c1c1c;
+  --card-foreground: #fafafa;
+  --primary: #e8e8e8;
+  --primary-foreground: #171717;
+  --muted: #2a2a2a;
+  --muted-foreground: #a1a1aa;
+  --destructive: #f87171;
+  --border: rgb(255 255 255 / 22%);
+
+  --rmf-color-page: var(--background);
+  --rmf-color-surface: var(--card);
+  --rmf-color-fg: var(--foreground);
+  --rmf-color-muted: var(--muted-foreground);
+  --rmf-color-border: #404040;
   --rmf-shadow-sm: 0 1px 2px rgb(0 0 0 / 0.35);
 }
 

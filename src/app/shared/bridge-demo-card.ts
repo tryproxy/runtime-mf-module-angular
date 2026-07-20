@@ -4,17 +4,10 @@ import { getCardCopy } from './messages';
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || 'http://localhost:3000';
 
-const JSON_PANEL = {
-  light: {
-    // !important — shell dark `color` + any preflight on <pre>/code otherwise wins
-    style: 'background:#f1f5f9!important;color:#0f172a!important',
-  },
-  dark: {
-    style: 'background:#0b1220!important;color:#e2e8f0!important',
-  },
-} as const;
-
-/** Shows shell theme/locale + protected GET via bridge.auth.http. */
+/**
+ * Mirrors React ProtectedMeButton: Card + primary Button + pre.bg-muted.
+ * Colors come from shell tokens (--card/--muted/--primary/…) so dark/light match.
+ */
 @Component({
   selector: 'app-bridge-demo-card',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -27,10 +20,10 @@ const JSON_PANEL = {
       max-width: 28rem;
       margin: 1.5rem;
       padding: 1.25rem 1.5rem;
-      border: 1px solid var(--rmf-color-border, #e2e8f0);
-      border-radius: var(--rmf-radius-md, 0.5rem);
-      background: var(--rmf-color-surface, #fff);
-      color: var(--rmf-color-fg, #0f172a);
+      border: 1px solid var(--border, var(--rmf-color-border, #e2e8f0));
+      border-radius: var(--radius, var(--rmf-radius-md, 0.625rem));
+      background: var(--card, var(--rmf-color-surface, #fff));
+      color: var(--card-foreground, var(--rmf-color-fg, #0f172a));
       box-shadow: var(--rmf-shadow-sm, 0 1px 2px rgb(15 23 42 / 0.06));
       font-family: system-ui, sans-serif;
     }
@@ -39,28 +32,31 @@ const JSON_PANEL = {
       margin: 0 0 0.5rem;
       font-size: 1.25rem;
       font-weight: 600;
+      color: var(--card-foreground, var(--rmf-color-fg, #0f172a));
     }
 
     .card p {
       margin: 0 0 0.75rem;
-      color: var(--rmf-color-muted, #64748b);
+      color: var(--muted-foreground, var(--rmf-color-muted, #64748b));
       line-height: 1.45;
     }
 
     .meta {
       margin: 0 0 1rem;
       font-size: 0.875rem;
-      color: var(--rmf-color-muted, #64748b);
+      color: var(--muted-foreground, var(--rmf-color-muted, #64748b));
     }
 
+    /* Same as shadcn default Button (primary) — light chrome in dark theme */
     button {
       appearance: none;
-      border: 1px solid var(--rmf-color-border, #e2e8f0);
-      border-radius: 0.5rem;
-      background: var(--rmf-color-fg, #0f172a);
-      color: var(--rmf-color-surface, #fff);
-      padding: 0.4rem 0.75rem;
+      border: none;
+      border-radius: 9999px;
+      background: var(--primary, #171717);
+      color: var(--primary-foreground, #fafafa);
+      padding: 0.45rem 1rem;
       font-size: 0.875rem;
+      font-weight: 500;
       cursor: pointer;
     }
 
@@ -71,11 +67,12 @@ const JSON_PANEL = {
 
     .error {
       margin: 0.75rem 0 0;
-      color: #dc2626;
+      color: var(--destructive, #dc2626);
       font-size: 0.8rem;
       word-break: break-all;
     }
 
+    /* Same as React: pre className="bg-muted … text-xs" — inherits foreground */
     .me-json {
       display: block;
       margin: 0.75rem 0 0;
@@ -87,16 +84,8 @@ const JSON_PANEL = {
       overflow-x: auto;
       white-space: pre-wrap;
       word-break: break-word;
-    }
-
-    .me-json--light {
-      background: #f1f5f9 !important;
-      color: #0f172a !important;
-    }
-
-    .me-json--dark {
-      background: #0b1220 !important;
-      color: #e2e8f0 !important;
+      background: var(--muted, #f4f4f5) !important;
+      color: var(--foreground, #0a0a0a) !important;
     }
   `,
   template: `
@@ -112,14 +101,7 @@ const JSON_PANEL = {
         <p class="error">{{ error() }}</p>
       }
       @if (meJson()) {
-        <div
-          class="me-json"
-          [class.me-json--dark]="themeMode() === 'dark'"
-          [class.me-json--light]="themeMode() !== 'dark'"
-          [attr.style]="jsonStyle()"
-        >
-          {{ meJson() }}
-        </div>
+        <div class="me-json">{{ meJson() }}</div>
       }
     </article>
   `,
@@ -134,10 +116,6 @@ export class BridgeDemoCard {
   public readonly meJson = signal<string | null>(null);
 
   public readonly copy = computed(() => getCardCopy(this.locale()));
-
-  public readonly jsonStyle = computed(
-    () => JSON_PANEL[this.themeMode() === 'dark' ? 'dark' : 'light'].style,
-  );
 
   public async requestMe(): Promise<void> {
     this.error.set(null);
