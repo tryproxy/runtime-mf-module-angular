@@ -35,7 +35,7 @@ export class RemoteRoot {
       };
 
       const applyLocale = () => {
-        this.locale.set(bridge.i18n.getLocale());
+        this.locale.set(bridge.i18n.getSnapshot().locale);
       };
 
       applyTheme();
