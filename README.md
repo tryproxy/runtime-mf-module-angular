@@ -13,9 +13,14 @@ pnpm install --frozen-lockfile
 Serves `@originjs` `remoteEntry.js` exposing `./mount` (HostBridge mount contract).
 
 ```bash
-pnpm dev       # http://localhost:5002 — CORS on; remoteEntry at /assets/remoteEntry.js
 pnpm build
-pnpm preview   # also port 5002
+pnpm preview   # http://localhost:5002 — CORS on; remoteEntry at /assets/remoteEntry.js
+```
+
+`pnpm dev` is for **standalone** Vite (no `remoteEntry.js` — `@originjs` only emits it on build). For shell federation use **build + preview**.
+
+```bash
+pnpm dev       # standalone only (no remoteEntry)
 ```
 
 Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`).
