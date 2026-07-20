@@ -15,7 +15,7 @@ export class RemoteRoot {
   public readonly bridge = input<HostBridge | null>(null);
   public readonly mountRoot = input<HTMLElement | null>(null);
 
-  public readonly themeMode = signal<ThemeMode>('light');
+  public readonly themeMode = signal<ThemeMode>('dark');
   public readonly locale = signal<AppLocale>('en');
 
   constructor() {

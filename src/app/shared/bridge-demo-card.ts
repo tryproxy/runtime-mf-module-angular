@@ -107,7 +107,7 @@ const API_BASE = import.meta.env.VITE_API_BASE_URL?.replace(/\/+$/, '') || 'http
   `,
 })
 export class BridgeDemoCard {
-  public readonly themeMode = input<ThemeMode>('light');
+  public readonly themeMode = input<ThemeMode>('dark');
   public readonly locale = input<AppLocale>('en');
   public readonly bridge = input<HostBridge | null>(null);
 

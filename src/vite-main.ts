@@ -12,5 +12,5 @@ if (!container) {
 mount({
   container,
   basename: '/',
-  bridge: createMockHostBridge({ theme: 'light', locale: 'en' }),
+  bridge: createMockHostBridge({ theme: 'dark', locale: 'en' }),
 });

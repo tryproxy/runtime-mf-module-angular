@@ -7,10 +7,10 @@ import { applyModuleTheme } from './shared/apply-module-theme';
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [BridgeDemoCard],
-  template: ` <app-bridge-demo-card themeMode="light" locale="en" /> `,
+  template: ` <app-bridge-demo-card themeMode="dark" locale="en" /> `,
 })
 export class App {
   constructor() {
-    applyModuleTheme('light');
+    applyModuleTheme('dark');
   }
 }
