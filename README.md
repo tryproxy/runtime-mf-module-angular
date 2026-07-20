@@ -25,6 +25,8 @@ pnpm dev       # standalone only (no remoteEntry)
 
 Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`).
 
+API base (Vite build-time): `VITE_API_BASE_URL` (default `http://localhost:3000`). Set this on Vercel to your Nest API origin — not the shell URL.
+
 Ports: shell `5000`, React remote `5001`, this Angular remote `5002`.
 
 ## Standalone Angular CLI
