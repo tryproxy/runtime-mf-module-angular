@@ -1,3 +1,4 @@
+import { APP_BASE_HREF } from '@angular/common';
 import {
   type ApplicationRef,
   type ComponentRef,
@@ -5,20 +6,40 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 import type { MountRemoteApp } from '@platform/runtime-mf-contract';
+import { appRoutes } from '../app.routes';
+import { HOST_BRIDGE } from '../shared/host-bridge.token';
+import { LocaleContext } from '../shared/locale-context';
+import { ThemeContext } from '../shared/theme-context';
 import { RemoteRoot } from './remote-root';
+
+function normalizeBasename(basename: string): string {
+  if (!basename || basename === '/') {
+    return '/';
+  }
+
+  return basename.endsWith('/') ? basename.slice(0, -1) : basename;
+}
 
 /**
  * Federation mount seam — same HostBridge contract as the React remote.
  * Vite exposes `./mount` → this module.
  */
-export const mount: MountRemoteApp = ({ container, bridge }) => {
+export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
   let destroyed = false;
   let appRef: ApplicationRef | undefined;
   let componentRef: ComponentRef<RemoteRoot> | undefined;
 
   void createApplication({
-    providers: [provideBrowserGlobalErrorListeners()],
+    providers: [
+      provideBrowserGlobalErrorListeners(),
+      provideRouter(appRoutes),
+      { provide: APP_BASE_HREF, useValue: normalizeBasename(basename) },
+      { provide: HOST_BRIDGE, useValue: bridge },
+      ThemeContext,
+      LocaleContext,
+    ],
   }).then(app => {
     if (destroyed) {
       app.destroy();

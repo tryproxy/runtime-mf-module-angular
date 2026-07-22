@@ -1,22 +1,28 @@
-import { ChangeDetectionStrategy, Component, effect, input, signal } from '@angular/core';
-import { BridgeDemoCard } from '../shared/bridge-demo-card';
+import { ChangeDetectionStrategy, Component, effect, inject, input } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+import type { HostBridge } from '@platform/runtime-mf-contract';
 import { applyModuleTheme } from '../shared/apply-module-theme';
-import type { AppLocale, HostBridge, ThemeMode } from '@platform/runtime-mf-contract';
+import { LocaleContext } from '../shared/locale-context';
+import { ThemeContext } from '../shared/theme-context';
+import { ModuleNav } from '../ui/module-nav';
 
 @Component({
   selector: 'app-remote-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [BridgeDemoCard],
+  imports: [RouterOutlet, ModuleNav],
   template: `
-    <app-bridge-demo-card [themeMode]="themeMode()" [locale]="locale()" [bridge]="bridge()" />
+    @if (!bridge()) {
+      <app-module-nav />
+    }
+    <router-outlet />
   `,
 })
 export class RemoteRoot {
   public readonly bridge = input<HostBridge | null>(null);
   public readonly mountRoot = input<HTMLElement | null>(null);
 
-  public readonly themeMode = signal<ThemeMode>('dark');
-  public readonly locale = signal<AppLocale>('en');
+  private readonly theme = inject(ThemeContext);
+  private readonly locale = inject(LocaleContext);
 
   constructor() {
     effect(onCleanup => {
@@ -24,7 +30,7 @@ export class RemoteRoot {
       const mountRoot = this.mountRoot();
 
       if (!bridge) {
-        applyModuleTheme(this.themeMode(), mountRoot);
+        applyModuleTheme(this.theme.mode(), mountRoot);
 
         return;
       }
@@ -32,12 +38,12 @@ export class RemoteRoot {
       const applyTheme = () => {
         const mode = bridge.theme.getSnapshot().mode;
 
-        this.themeMode.set(mode);
+        this.theme.mode.set(mode);
         applyModuleTheme(mode, mountRoot);
       };
 
       const applyLocale = () => {
-        this.locale.set(bridge.i18n.getSnapshot().locale);
+        this.locale.locale.set(bridge.i18n.getSnapshot().locale);
       };
 
       applyTheme();

@@ -1,10 +1,23 @@
+import { APP_BASE_HREF } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 import { App } from './app';
+import { appRoutes } from './app.routes';
+import { HOST_BRIDGE } from './shared/host-bridge.token';
+import { LocaleContext } from './shared/locale-context';
+import { ThemeContext } from './shared/theme-context';
 
 describe('App', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [App],
+      providers: [
+        provideRouter(appRoutes),
+        { provide: APP_BASE_HREF, useValue: '/' },
+        { provide: HOST_BRIDGE, useValue: null },
+        ThemeContext,
+        LocaleContext,
+      ],
     }).compileComponents();
   });
 
@@ -15,7 +28,7 @@ describe('App', () => {
     expect(app).toBeTruthy();
   });
 
-  it('should render bridge demo card', async () => {
+  it('should render overview bridge demo card', async () => {
     const fixture = TestBed.createComponent(App);
 
     await fixture.whenStable();
@@ -23,6 +36,6 @@ describe('App', () => {
 
     expect(compiled.querySelector('h1')?.textContent).toContain('Angular remote');
     expect(compiled.textContent).toContain('locale: en');
-    expect(compiled.textContent).toContain('Theme: light');
+    expect(compiled.textContent).toContain('Theme: dark');
   });
 });
