@@ -82,7 +82,7 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     app.tick();
   });
 
-  const instance: RemoteAppInstance = {
+  const instance = {
     ready: ready.then(() => undefined),
     unmount() {
       destroyed = true;
@@ -96,7 +96,8 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     },
   };
 
-  return instance;
+  // `ready` lands in contract 0.3.1+; keep providing it at runtime on 0.3.0 types.
+  return instance as RemoteAppInstance;
 };
 
 /** Re-export contract types from the federation entry. */
