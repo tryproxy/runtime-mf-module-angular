@@ -1,9 +1,12 @@
 import type { Routes } from '@angular/router';
-import { AboutPage } from './features/about/about-page';
-import { OverviewPage } from './features/overview/overview-page';
+import { angularNavManifest } from './model/nav-manifest';
+import { angularPageComponent } from './model/page-components';
 
+/** Routes projected from the same manifest as `nav.json` + embedded pages. */
 export const appRoutes: Routes = [
-  { path: '', component: OverviewPage },
-  { path: 'about', component: AboutPage },
-  { path: '**', redirectTo: '' },
+  ...angularNavManifest.pages.map(page => ({
+    path: page.segment,
+    component: angularPageComponent(page.id),
+  })),
+  { path: '**', redirectTo: angularNavManifest.pages[0]?.segment ?? '' },
 ];

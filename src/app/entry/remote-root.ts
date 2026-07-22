@@ -1,32 +1,35 @@
-import { ChangeDetectionStrategy, Component, effect, inject, input, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
+import { NgComponentOutlet } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import type { HostBridge } from '@platform/runtime-mf-contract';
-import { AboutPage } from '../features/about/about-page';
-import { OverviewPage } from '../features/overview/overview-page';
-import type { AngularNavPageId } from '../model/nav-manifest';
+import { angularNavManifest, type AngularNavPageId } from '../model/nav-manifest';
+import { angularPageComponent } from '../model/page-components';
 import { applyModuleTheme } from '../shared/apply-module-theme';
 import { LocaleContext } from '../shared/locale-context';
 import { pageIdFromPathname } from '../shared/page-id-from-pathname';
 import { ThemeContext } from '../shared/theme-context';
 import { ModuleNav } from '../ui/module-nav';
 
+const defaultPageId: AngularNavPageId = angularNavManifest.pages[0]?.id ?? 'overview';
+
 @Component({
   selector: 'app-remote-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterOutlet, ModuleNav, OverviewPage, AboutPage],
+  imports: [RouterOutlet, ModuleNav, NgComponentOutlet],
   template: `
     @if (!isEmbedded()) {
       <app-module-nav />
       <router-outlet />
     } @else {
-      @switch (activePageId()) {
-        @case ('about') {
-          <app-about-page />
-        }
-        @default {
-          <app-overview-page />
-        }
-      }
+      <ng-container [ngComponentOutlet]="activePageComponent()" />
     }
   `,
 })
@@ -38,7 +41,9 @@ export class RemoteRoot {
   /** Shell basename, e.g. `/remote-angular` (embedded only). */
   public readonly baseHref = input('/');
 
-  public readonly activePageId = signal<AngularNavPageId>('overview');
+  public readonly activePageId = signal<AngularNavPageId>(defaultPageId);
+
+  public readonly activePageComponent = computed(() => angularPageComponent(this.activePageId()));
 
   private readonly theme = inject(ThemeContext);
   private readonly locale = inject(LocaleContext);

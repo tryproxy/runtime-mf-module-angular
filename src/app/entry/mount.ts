@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
-import type { MountRemoteApp } from '@platform/runtime-mf-contract';
+import type { MountRemoteApp, RemoteAppInstance } from '@platform/runtime-mf-contract';
 import { appRoutes } from '../app.routes';
 import { HOST_BRIDGE } from '../shared/host-bridge.token';
 import { LocaleContext } from '../shared/locale-context';
@@ -28,6 +28,9 @@ function normalizeBasename(basename: string): string {
  *
  * Embedded: no Angular Router (shell owns history via HostBridge.navigation).
  * Standalone: Angular Router + initialNavigation after attach.
+ *
+ * `createApplication` is async — callers should await `instance.ready`
+ * before treating the remote as mounted.
  */
 export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
   let destroyed = false;
@@ -37,7 +40,7 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
   const baseHref = normalizeBasename(basename);
   const isEmbedded = baseHref !== '/';
 
-  void createApplication({
+  const ready = createApplication({
     providers: [
       provideBrowserGlobalErrorListeners(),
       ...(isEmbedded
@@ -79,14 +82,21 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     app.tick();
   });
 
-  return {
+  const instance: RemoteAppInstance = {
+    ready: ready.then(() => undefined),
     unmount() {
       destroyed = true;
-      componentRef?.destroy();
-      appRef?.destroy();
-      container.replaceChildren();
+      void ready.finally(() => {
+        componentRef?.destroy();
+        componentRef = undefined;
+        appRef?.destroy();
+        appRef = undefined;
+        container.replaceChildren();
+      });
     },
   };
+
+  return instance;
 };
 
 /** Re-export contract types from the federation entry. */
