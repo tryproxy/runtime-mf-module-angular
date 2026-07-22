@@ -1,39 +1,56 @@
 # runtime-mf-module-angular
 
-Minimal Angular Module Federation remote for `runtime-mf-shell`.
+Angular Module Federation remote (`angular_remote`, port **5002**) for `runtime-mf-shell`. Same HostBridge / mount contract as the React remote — different UI stack.
 
-## Setup
+Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract`.
+
+---
+
+## What this remote provides
+
+| Surface       | Notes                                                          |
+| ------------- | -------------------------------------------------------------- |
+| `./mount`     | Federation expose — async `createApplication`; returns `ready` |
+| `nav.json`    | Pre-mount page list for shell chrome (from `nav-manifest.ts`)  |
+| Pages         | Overview + About — under shell basename `/remote-angular`      |
+| HostBridge DI | `HOST_BRIDGE` token + theme/locale contexts                    |
+
+## What it must obey
+
+1. Implement `mount({ container, bridge, basename })` → `{ unmount(), ready }` (`ready` matters — bootstrap is async).
+2. **Embedded:** no Angular Router fight — follow `bridge.navigation`; shell owns history.
+3. **Standalone:** Angular Router + `initialNavigation` after attach is OK.
+4. Follow **HostBridge** for theme / locale / auth — never `localStorage` for tokens.
+5. Keep **`nav-manifest.ts`** the single source for pages (routes + `nav.json`).
+
+---
+
+## Key files
+
+| Path                                                    | Why it matters                              |
+| ------------------------------------------------------- | ------------------------------------------- |
+| `src/app/entry/mount.ts`                                | Federation mount / unmount + `ready`        |
+| `src/app/entry/remote-root.ts`                          | Root component wired to bridge              |
+| `src/app/model/nav-manifest.ts`                         | Pages list → embedded pages + `nav.json`    |
+| `src/app/model/page-components.ts`                      | Page id → component map                     |
+| `src/app/shared/host-bridge.token.ts`                   | DI token for `HostBridge`                   |
+| `src/app/shared/theme-context.ts` / `locale-context.ts` | Bridge → Angular contexts                   |
+| `src/app/app.routes.ts`                                 | Standalone routes only                      |
+| `src/vite-main.ts`                                      | Vite standalone entry                       |
+| `vite.config.ts`                                        | Federation expose + nav.json emit           |
+| `vercel.json`                                           | Deploy rewrites; keep `/nav.json` reachable |
+
+---
+
+## Local run
+
+`@originjs` emits `remoteEntry.js` on **build**, not on `pnpm dev`.
 
 ```bash
 pnpm install --frozen-lockfile
+pnpm build && pnpm preview   # federation → http://localhost:5002
+pnpm dev                     # standalone Vite only (no remoteEntry)
+pnpm start                   # optional ng serve
 ```
 
-## Federation remote (shell integration)
-
-Serves `@originjs` `remoteEntry.js` exposing `./mount` (HostBridge mount contract).
-
-```bash
-pnpm build
-pnpm preview   # http://localhost:5002 — CORS on; remoteEntry at /assets/remoteEntry.js
-```
-
-`pnpm dev` is for **standalone** Vite (no `remoteEntry.js` — `@originjs` only emits it on build). For shell federation use **build + preview**.
-
-```bash
-pnpm dev       # standalone only (no remoteEntry)
-```
-
-Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`).
-
-API base (Vite build-time): `VITE_API_BASE_URL` (default `http://localhost:3000`). Set this on Vercel to your Nest API origin — not the shell URL.
-
-Ports: shell `5000`, React remote `5001`, this Angular remote `5002`.
-
-## Standalone Angular CLI
-
-```bash
-pnpm start     # ng serve (default Angular port)
-pnpm build:ng
-pnpm lint
-pnpm test
-```
+Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`). Set `VITE_API_BASE_URL` to the Nest API origin, not the shell.
