@@ -7,7 +7,7 @@ import { applyModuleTheme } from './shared/apply-module-theme';
   selector: 'app-root',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RemoteRoot],
-  template: ` <app-remote-root /> `,
+  template: ` <app-remote-root [isEmbedded]="false" /> `,
 })
 export class App {
   constructor() {

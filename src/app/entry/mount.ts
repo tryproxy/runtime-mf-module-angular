@@ -6,7 +6,7 @@ import {
   provideBrowserGlobalErrorListeners,
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import type { MountRemoteApp } from '@platform/runtime-mf-contract';
 import { appRoutes } from '../app.routes';
 import { HOST_BRIDGE } from '../shared/host-bridge.token';
@@ -25,17 +25,24 @@ function normalizeBasename(basename: string): string {
 /**
  * Federation mount seam — same HostBridge contract as the React remote.
  * Vite exposes `./mount` → this module.
+ *
+ * Embedded: no Angular Router (shell owns history via HostBridge.navigation).
+ * Standalone: Angular Router + initialNavigation after attach.
  */
 export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
   let destroyed = false;
   let appRef: ApplicationRef | undefined;
   let componentRef: ComponentRef<RemoteRoot> | undefined;
 
+  const baseHref = normalizeBasename(basename);
+  const isEmbedded = baseHref !== '/';
+
   void createApplication({
     providers: [
       provideBrowserGlobalErrorListeners(),
-      provideRouter(appRoutes),
-      { provide: APP_BASE_HREF, useValue: normalizeBasename(basename) },
+      ...(isEmbedded
+        ? []
+        : [provideRouter(appRoutes), { provide: APP_BASE_HREF, useValue: baseHref }]),
       { provide: HOST_BRIDGE, useValue: bridge },
       ThemeContext,
       LocaleContext,
@@ -59,7 +66,17 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     });
     componentRef.setInput('bridge', bridge);
     componentRef.setInput('mountRoot', container);
+    componentRef.setInput('isEmbedded', isEmbedded);
+    componentRef.setInput('baseHref', baseHref);
     app.attachView(componentRef.hostView);
+    componentRef.changeDetectorRef.detectChanges();
+
+    if (!isEmbedded) {
+      // createApplication does not bootstrap → router initializer never runs.
+      app.injector.get(Router).initialNavigation();
+    }
+
+    app.tick();
   });
 
   return {
