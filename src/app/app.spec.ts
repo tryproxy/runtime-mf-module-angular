@@ -1,6 +1,6 @@
 import { APP_BASE_HREF } from '@angular/common';
 import { TestBed } from '@angular/core/testing';
-import { provideRouter } from '@angular/router';
+import { provideRouter, Router } from '@angular/router';
 import { App } from './app';
 import { appRoutes } from './app.routes';
 import { HOST_BRIDGE } from './shared/host-bridge.token';
@@ -30,13 +30,18 @@ describe('App', () => {
 
   it('should render overview bridge demo card', async () => {
     const fixture = TestBed.createComponent(App);
+    const router = TestBed.inject(Router);
 
+    await router.navigateByUrl('/');
     fixture.detectChanges();
     await fixture.whenStable();
     fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
 
-    expect(compiled.querySelector('h1')?.textContent).toContain('Angular remote');
+    const compiled = fixture.nativeElement as HTMLElement;
+    const heading = compiled.querySelector('h1');
+
+    expect(heading).not.toBeNull();
+    expect(heading?.textContent).toContain('Angular remote');
     expect(compiled.textContent).toContain('locale: en');
     expect(compiled.textContent).toContain('Theme: dark');
   });
