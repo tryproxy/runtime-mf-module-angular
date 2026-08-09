@@ -51,6 +51,12 @@ export default defineConfig({
     strictPort: true,
     cors: true,
   },
+  optimizeDeps: {
+    // Angular and Federation virtual entries discover these after Vite's
+    // initial scan. Keep optimizer metadata stable across dev-server restarts.
+    noDiscovery: true,
+    include: ['rxjs', 'rxjs/operators', '@module-federation/runtime'],
+  },
   build: {
     target: 'esnext',
   },
