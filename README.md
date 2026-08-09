@@ -17,7 +17,7 @@ Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contra
 
 ## What it must obey
 
-1. Implement `mount({ container, bridge, basename })` → `{ unmount(), ready }` (`ready` matters — bootstrap is async).
+1. Implement `mount({ container, bridge, basename })` → `{ unmount(), ready }`; readiness resolves after Angular bootstrap and cleanup is idempotent, including disposal during bootstrap.
 2. **Embedded:** no Angular Router fight — follow `bridge.navigation`; shell owns history.
 3. **Standalone:** Angular Router + `initialNavigation` after attach is OK.
 4. Follow **HostBridge** for theme / locale / auth — never `localStorage` for tokens.

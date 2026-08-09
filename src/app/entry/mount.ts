@@ -82,17 +82,47 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     app.tick();
   });
 
+  const reportCleanupFailure = (error: unknown) => {
+    try {
+      bridge.telemetry.captureException(error, {
+        lifecycleStage: 'cleanup',
+      });
+    } catch {
+      // Cleanup and observability failures must not create unhandled rejections.
+    }
+  };
+
+  const cleanup = () => {
+    try {
+      componentRef?.destroy();
+    } catch (error) {
+      reportCleanupFailure(error);
+    }
+    componentRef = undefined;
+
+    try {
+      appRef?.destroy();
+    } catch (error) {
+      reportCleanupFailure(error);
+    }
+    appRef = undefined;
+
+    try {
+      container.replaceChildren();
+    } catch (error) {
+      reportCleanupFailure(error);
+    }
+  };
+
   const instance = {
     ready: ready.then(() => undefined),
     unmount() {
+      if (destroyed) {
+        return;
+      }
+
       destroyed = true;
-      void ready.finally(() => {
-        componentRef?.destroy();
-        componentRef = undefined;
-        appRef?.destroy();
-        appRef = undefined;
-        container.replaceChildren();
-      });
+      void ready.then(cleanup, cleanup);
     },
   };
 
