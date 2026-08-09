@@ -54,3 +54,5 @@ pnpm start                   # optional ng serve
 ```
 
 Shell env: `VITE_ANGULAR_REMOTE_MANIFEST_URL` (default `http://localhost:5002/mf-manifest.json`). Set `VITE_API_BASE_URL` to the Nest API origin, not the shell.
+
+This is a browser-only producer. Its manifest omits the Module Federation plugin's default SSR entry metadata because this build does not emit an SSR entry.
