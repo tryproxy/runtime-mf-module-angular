@@ -43,7 +43,7 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
-    "@platform/runtime-mf-contract": "github:tryproxy/runtime-mf-contract",
+    "@platform/runtime-mf-contract": "github:tryproxy/runtime-mf-contract#v0.4.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0"
   },

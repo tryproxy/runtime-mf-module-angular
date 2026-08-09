@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { createApplication } from '@angular/platform-browser';
 import { provideRouter, Router } from '@angular/router';
-import type { MountRemoteApp, RemoteAppInstance } from '@platform/runtime-mf-contract';
+import type { MountRemoteApp } from '@platform/runtime-mf-contract';
 import { appRoutes } from '../app.routes';
 import { HOST_BRIDGE } from '../shared/host-bridge.token';
 import { LocaleContext } from '../shared/locale-context';
@@ -126,8 +126,7 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
     },
   };
 
-  // `ready` lands in contract 0.3.1+; keep providing it at runtime on 0.3.0 types.
-  return instance as RemoteAppInstance;
+  return instance;
 };
 
 /** Re-export contract types from the federation entry. */
