@@ -1,6 +1,6 @@
 # runtime-mf-module-angular
 
-Angular Module Federation remote (`angular_remote`, port **5002**) for `runtime-mf-shell`. Same HostBridge / mount contract as the React remote — different UI stack.
+Angular Module Federation remote (`runtime_mf_module_angular`, shell alias `angular_remote`, port **5002**) for `runtime-mf-shell`. Same HostBridge / mount contract as the React remote — different UI stack.
 
 Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract`.
 
@@ -44,13 +44,13 @@ Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contra
 
 ## Local run
 
-`@originjs` emits `remoteEntry.js` on **build**, not on `pnpm dev`.
+The Module Federation Vite producer emits `mf-manifest.json` and `remoteEntry.js` for the production build.
 
 ```bash
 pnpm install --frozen-lockfile
 pnpm build && pnpm preview   # federation → http://localhost:5002
-pnpm dev                     # standalone Vite only (no remoteEntry)
+pnpm dev                     # local development
 pnpm start                   # optional ng serve
 ```
 
-Shell env: `VITE_ANGULAR_REMOTE_ENTRY_URL` (default `http://localhost:5002/assets/remoteEntry.js`). Set `VITE_API_BASE_URL` to the Nest API origin, not the shell.
+Shell env: `VITE_ANGULAR_REMOTE_MANIFEST_URL` (default `http://localhost:5002/mf-manifest.json`). Set `VITE_API_BASE_URL` to the Nest API origin, not the shell.
