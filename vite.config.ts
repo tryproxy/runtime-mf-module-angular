@@ -35,7 +35,7 @@ export default defineConfig({
       dts: false,
       shared: {},
       exposes: {
-        './mount': './src/app/entry/mount.ts',
+        './mount': './src/app/entry/index.ts',
       },
     }),
     rmfNavJson(),

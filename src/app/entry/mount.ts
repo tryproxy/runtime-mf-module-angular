@@ -1,30 +1,25 @@
 import { APP_BASE_HREF } from '@angular/common';
-import {
-  type ApplicationRef,
-  type ComponentRef,
-  createComponent,
-  provideBrowserGlobalErrorListeners,
-} from '@angular/core';
-import { createApplication } from '@angular/platform-browser';
+import { provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter, Router } from '@angular/router';
-import type { MountRemoteApp } from '@platform/runtime-mf-contract';
+import { createAngularRemoteMount } from '@platform/runtime-mf-adapters/angular';
 import { appRoutes } from '../app.routes';
 import { HOST_BRIDGE } from '../shared/host-bridge.token';
 import { LocaleContext } from '../shared/locale-context';
 import { ThemeContext } from '../shared/theme-context';
 import { RemoteRoot } from './remote-root';
 
-function normalizeBasename(basename: string): string {
-  if (!basename || basename === '/') {
-    return '/';
-  }
+function getRoutingMode(basename: string): {
+  baseHref: string;
+  isEmbedded: boolean;
+} {
+  const baseHref =
+    !basename || basename === '/' ? '/' : basename.endsWith('/') ? basename.slice(0, -1) : basename;
 
-  return basename.endsWith('/') ? basename.slice(0, -1) : basename;
+  return { baseHref, isEmbedded: baseHref !== '/' };
 }
 
 /**
- * Federation mount seam — same HostBridge contract as the React remote.
- * Vite exposes `./mount` → this module.
+ * Remote mount composition — same HostBridge contract as the React remote.
  *
  * Embedded: no Angular Router (shell owns history via HostBridge.navigation).
  * Standalone: Angular Router + initialNavigation after attach.
@@ -32,16 +27,12 @@ function normalizeBasename(basename: string): string {
  * `createApplication` is async — callers should await `instance.ready`
  * before treating the remote as mounted.
  */
-export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
-  let destroyed = false;
-  let appRef: ApplicationRef | undefined;
-  let componentRef: ComponentRef<RemoteRoot> | undefined;
+export const mount = createAngularRemoteMount({
+  rootComponent: RemoteRoot,
+  providers: ({ bridge, basename }) => {
+    const { baseHref, isEmbedded } = getRoutingMode(basename);
 
-  const baseHref = normalizeBasename(basename);
-  const isEmbedded = baseHref !== '/';
-
-  const ready = createApplication({
-    providers: [
+    return [
       provideBrowserGlobalErrorListeners(),
       ...(isEmbedded
         ? []
@@ -49,93 +40,22 @@ export const mount: MountRemoteApp = ({ container, bridge, basename }) => {
       { provide: HOST_BRIDGE, useValue: bridge },
       ThemeContext,
       LocaleContext,
-    ],
-  }).then(app => {
-    if (destroyed) {
-      app.destroy();
+    ];
+  },
+  configureRoot: ({ component, bridge, container, basename }) => {
+    const { baseHref, isEmbedded } = getRoutingMode(basename);
 
-      return;
-    }
-
-    appRef = app;
-
-    const host = document.createElement('div');
-
-    container.appendChild(host);
-
-    componentRef = createComponent(RemoteRoot, {
-      environmentInjector: app.injector,
-      hostElement: host,
-    });
-    componentRef.setInput('bridge', bridge);
-    componentRef.setInput('mountRoot', container);
-    componentRef.setInput('isEmbedded', isEmbedded);
-    componentRef.setInput('baseHref', baseHref);
-    app.attachView(componentRef.hostView);
-    componentRef.changeDetectorRef.detectChanges();
+    component.setInput('bridge', bridge);
+    component.setInput('mountRoot', container);
+    component.setInput('isEmbedded', isEmbedded);
+    component.setInput('baseHref', baseHref);
+  },
+  afterAttach: ({ application, basename }) => {
+    const { isEmbedded } = getRoutingMode(basename);
 
     if (!isEmbedded) {
       // createApplication does not bootstrap → router initializer never runs.
-      app.injector.get(Router).initialNavigation();
+      application.injector.get(Router).initialNavigation();
     }
-
-    app.tick();
-  });
-
-  const reportCleanupFailure = (error: unknown) => {
-    try {
-      bridge.telemetry.captureException(error, {
-        lifecycleStage: 'cleanup',
-      });
-    } catch {
-      // Cleanup and observability failures must not create unhandled rejections.
-    }
-  };
-
-  const cleanup = () => {
-    try {
-      componentRef?.destroy();
-    } catch (error) {
-      reportCleanupFailure(error);
-    }
-    componentRef = undefined;
-
-    try {
-      appRef?.destroy();
-    } catch (error) {
-      reportCleanupFailure(error);
-    }
-    appRef = undefined;
-
-    try {
-      container.replaceChildren();
-    } catch (error) {
-      reportCleanupFailure(error);
-    }
-  };
-
-  const instance = {
-    ready: ready.then(() => undefined),
-    unmount() {
-      if (destroyed) {
-        return;
-      }
-
-      destroyed = true;
-      void ready.then(cleanup, cleanup);
-    },
-  };
-
-  return instance;
-};
-
-/** Re-export contract types from the federation entry. */
-export type {
-  AppLocale,
-  HostBridge,
-  HostTelemetry,
-  MountRemoteApp,
-  RemoteAppInstance,
-  TelemetryProps,
-  ThemeMode,
-} from '@platform/runtime-mf-contract';
+  },
+});

@@ -1,6 +1,6 @@
 /**
- * Federation mount seam (app-level platform entry).
- * Vite exposes `./mount` → this slice.
+ * Public federation entry for the remote mount contract.
+ * Vite exposes `./mount` through this barrel.
  */
 export { mount } from './mount';
 export type {

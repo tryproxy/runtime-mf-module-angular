@@ -4,6 +4,8 @@ Angular Module Federation remote (`runtime_mf_module_angular`, shell alias `angu
 
 Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.4.0`.
 
+Angular lifecycle: `@platform/runtime-mf-adapters/angular`. The current workspace uses a temporary sibling file dependency until the adapters package receives an immutable release tag.
+
 ---
 
 ## What this remote provides
@@ -27,18 +29,19 @@ Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contra
 
 ## Key files
 
-| Path                                                    | Why it matters                              |
-| ------------------------------------------------------- | ------------------------------------------- |
-| `src/app/entry/mount.ts`                                | Federation mount / unmount + `ready`        |
-| `src/app/entry/remote-root.ts`                          | Root component wired to bridge              |
-| `src/app/model/nav-manifest.ts`                         | Pages list → embedded pages + `nav.json`    |
-| `src/app/model/page-components.ts`                      | Page id → component map                     |
-| `src/app/shared/host-bridge.token.ts`                   | DI token for `HostBridge`                   |
-| `src/app/shared/theme-context.ts` / `locale-context.ts` | Bridge → Angular contexts                   |
-| `src/app/app.routes.ts`                                 | Standalone routes only                      |
-| `src/vite-main.ts`                                      | Vite standalone entry                       |
-| `vite.config.ts`                                        | Federation expose + nav.json emit           |
-| `vercel.json`                                           | Deploy rewrites; keep `/nav.json` reachable |
+| Path                                                    | Why it matters                                   |
+| ------------------------------------------------------- | ------------------------------------------------ |
+| `src/app/entry/index.ts`                                | Public federation barrel: mount + contract types |
+| `src/app/entry/mount.ts`                                | Thin product composition over the adapter        |
+| `src/app/entry/remote-root.ts`                          | Root component wired to bridge                   |
+| `src/app/model/nav-manifest.ts`                         | Pages list → embedded pages + `nav.json`         |
+| `src/app/model/page-components.ts`                      | Page id → component map                          |
+| `src/app/shared/host-bridge.token.ts`                   | DI token for `HostBridge`                        |
+| `src/app/shared/theme-context.ts` / `locale-context.ts` | Bridge → Angular contexts                        |
+| `src/app/app.routes.ts`                                 | Standalone routes only                           |
+| `src/vite-main.ts`                                      | Vite standalone entry                            |
+| `vite.config.ts`                                        | Federation expose + nav.json emit                |
+| `vercel.json`                                           | Deploy rewrites; keep `/nav.json` reachable      |
 
 ---
 

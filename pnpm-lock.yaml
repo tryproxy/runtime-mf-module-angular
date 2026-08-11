@@ -26,6 +26,9 @@ importers:
       '@angular/router':
         specifier: ^21.2.0
         version: 21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(@angular/platform-browser@21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)))(rxjs@7.8.2)
+      '@platform/runtime-mf-adapters':
+        specifier: file:../runtime-mf-adapters
+        version: file:../runtime-mf-adapters(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(@angular/platform-browser@21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)))(@platform/runtime-mf-contract@https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d)
       '@platform/runtime-mf-contract':
         specifier: github:tryproxy/runtime-mf-contract#v0.4.0
         version: https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d
@@ -1519,6 +1522,24 @@ packages:
   '@parcel/watcher@2.5.6':
     resolution: {integrity: sha512-tmmZ3lQxAe/k/+rNnXQRawJ4NjxO2hqiOLTHvWchtGZULp4RyFeh6aU4XdOYBFe2KE1oShQTv4AblOs2iOrNnQ==}
     engines: {node: '>= 10.0.0'}
+
+  '@platform/runtime-mf-adapters@file:../runtime-mf-adapters':
+    resolution: {directory: ../runtime-mf-adapters, type: directory}
+    peerDependencies:
+      '@angular/core': ^21.0.0
+      '@angular/platform-browser': ^21.0.0
+      '@platform/runtime-mf-contract': ^0.4.0
+      react: ^18.3.0 || ^19.0.0
+      react-dom: ^18.3.0 || ^19.0.0
+    peerDependenciesMeta:
+      '@angular/core':
+        optional: true
+      '@angular/platform-browser':
+        optional: true
+      react:
+        optional: true
+      react-dom:
+        optional: true
 
   '@platform/runtime-mf-contract@https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d':
     resolution: {tarball: https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d}
@@ -5501,6 +5522,13 @@ snapshots:
       '@parcel/watcher-win32-ia32': 2.5.6
       '@parcel/watcher-win32-x64': 2.5.6
     optional: true
+
+  '@platform/runtime-mf-adapters@file:../runtime-mf-adapters(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(@angular/platform-browser@21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)))(@platform/runtime-mf-contract@https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d)':
+    dependencies:
+      '@platform/runtime-mf-contract': https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d
+    optionalDependencies:
+      '@angular/core': 21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2)
+      '@angular/platform-browser': 21.2.10(@angular/common@21.2.10(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))(rxjs@7.8.2))(@angular/core@21.2.10(@angular/compiler@21.2.10)(rxjs@7.8.2))
 
   '@platform/runtime-mf-contract@https://codeload.github.com/tryproxy/runtime-mf-contract/tar.gz/31aa6df8844aa1f6fd762556e4b52ba9c6c4358d': {}
 
