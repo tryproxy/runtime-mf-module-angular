@@ -2,9 +2,9 @@
 
 Angular Module Federation remote (`runtime_mf_module_angular`, shell alias `angular_remote`, port **5002**) for `runtime-mf-shell`. Same HostBridge / mount contract as the React remote — different UI stack.
 
-Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.4.0`.
+Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.5.1`.
 
-Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/runtime-mf-adapters#v0.1.0`.
+Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/runtime-mf-adapters#v0.1.2`.
 
 ---
 
