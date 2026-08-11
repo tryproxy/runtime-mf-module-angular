@@ -4,7 +4,7 @@ Angular Module Federation remote (`runtime_mf_module_angular`, shell alias `angu
 
 Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.4.0`.
 
-Angular lifecycle: `@platform/runtime-mf-adapters/angular`. The current workspace uses a temporary sibling file dependency until the adapters package receives an immutable release tag.
+Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/runtime-mf-adapters#v0.1.0`.
 
 ---
 
