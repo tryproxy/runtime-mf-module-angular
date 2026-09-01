@@ -50,7 +50,7 @@ Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/
 The Module Federation Vite producer emits `mf-manifest.json` and `remoteEntry.js` for the production build.
 
 ```bash
-pnpm ci                      # pnpm 11; Node 22+
+pnpm ci                      # pnpm 11; Node 22.13+
 pnpm build && pnpm preview   # federation → http://localhost:5002
 pnpm dev                     # local development
 pnpm start                   # optional ng serve
