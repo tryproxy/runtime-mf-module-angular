@@ -8,12 +8,12 @@ export const angularNavManifest = {
     {
       id: 'overview',
       segment: '',
-      label: { en: 'Overview', ru: 'Обзор' },
+      label: { en: 'Overview', ru: 'Обзор', es: 'Resumen' },
     },
     {
       id: 'about',
       segment: 'about',
-      label: { en: 'About', ru: 'О модуле' },
+      label: { en: 'About', ru: 'О модуле', es: 'Acerca de' },
     },
   ],
 } as const satisfies NavManifest;

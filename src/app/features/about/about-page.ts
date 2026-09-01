@@ -10,6 +10,10 @@ const copy = {
     title: 'О модуле',
     body: 'Вторая страница Angular remote для проверки PoC nav-manifest.',
   },
+  es: {
+    title: 'Acerca de',
+    body: 'Segunda página del remote Angular para verificar el PoC de nav-manifest.',
+  },
 } as const;
 
 @Component({

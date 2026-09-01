@@ -2,9 +2,9 @@
 
 Angular Module Federation remote (`runtime_mf_module_angular`, shell alias `angular_remote`, port **5002**) for `runtime-mf-shell`. Same HostBridge / mount contract as the React remote — different UI stack.
 
-Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.5.2`.
+Contract: `@platform/runtime-mf-contract` via `github:tryproxy/runtime-mf-contract#v0.5.3`.
 
-Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/runtime-mf-adapters#v0.1.2`.
+Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/runtime-mf-adapters#v0.1.3`.
 
 ---
 
@@ -50,7 +50,7 @@ Angular lifecycle: `@platform/runtime-mf-adapters/angular` via `github:tryproxy/
 The Module Federation Vite producer emits `mf-manifest.json` and `remoteEntry.js` for the production build.
 
 ```bash
-pnpm install --frozen-lockfile
+pnpm ci                      # pnpm 11; Node 22+
 pnpm build && pnpm preview   # federation → http://localhost:5002
 pnpm dev                     # local development
 pnpm start                   # optional ng serve
